@@ -1,41 +1,59 @@
 <?php
 
+
 class ProductController extends AbstractController
 {
     const PAGE_RECORDS = 10;
 
+    /**
+     * Product list with pagination
+     */
     public function listAction()
     {
-        $page = intval($this->dispatcher->getParam('page'));
+        $page = intval($this->dispatcher->getParam('page', 'int'));
 
-        $products = Product::find([
-            "limit"  => self::PAGE_RECORDS,
-            "offset" => self::PAGE_RECORDS * $page,
-            "order"  => "createdAt DESC",
-        ]);
+        $productService = new ProductService();
+        [
+            'products'   => $products,
+            'pagesCount' => $pagesCount,
+        ] = $productService->getProductList($page);
 
-        echo (new \Phalcon\Debug\Dump())->variable($products->toArray());
+        $this->view->products = $products;
+        $this->view->t = $this->translator;
+        $this->view->pagesCount = $pagesCount === 0 ? 1 : $pagesCount;
+        $this->view->currentPage = $page;
+        $this->view->pick('product/list');
     }
 
+    /**
+     * Add new product
+     * @Auth
+     */
     public function addAction()
     {
-//        $product = new Product();
-//        $product->setName('asd');
-//        $product->setDescription('Lorem ipsum ...');
-//        $product->setPrice(12.456);
-//        $success = $product->save();
-//        if ($success) {
-//            echo "OK";
-//        } else {
-//            echo "Err: ";
-//
-//            $messages = $product->getMessages();
-//
-//            foreach ($messages as $message) {
-//                echo $message->getMessage(), "<br/>";
-//            }
-//        }
+        $product = new Product();
+        $form = new ProductForm($product);
 
-        $this->view->form = new ProductForm();
+        if ($this->request->isPost()) {
+            if (!$form->isValid($this->request->getPost())) {
+                foreach ($form->getMessages() as $message) {
+                    $this->flashSession->error($message->getMessage());
+                }
+            } else {
+                if ($product->save()) {
+                    return $this->dispatcher->forward([
+                        'controller' => 'product',
+                        'action'     => 'list',
+                    ]);
+                } else {
+                    foreach ($product->getMessages() as $message) {
+                        $this->flashSession->error($message);
+                    }
+                }
+            }
+        }
+
+        $this->view->form = $form;
+        $this->view->pick('product/new');
     }
 }

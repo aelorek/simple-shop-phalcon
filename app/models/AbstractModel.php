@@ -78,8 +78,12 @@ class AbstractModel extends Model
         $eventsManager->attach(
             'model:afterFetch',
             function (Event $event, AbstractModel $model) {
-                $model->createdAt = new \DateTime($this->createdAt);
-                $model->updatedAt = new \DateTime($this->updatedAt);
+                if (!is_object($this->createdAt)) {
+                    $model->createdAt = new \DateTime($this->createdAt);
+                }
+                if (!is_object($this->updatedAt)) {
+                    $model->updatedAt = new \DateTime($this->updatedAt);
+                }
             }
         );
 

@@ -20,6 +20,13 @@ class User extends AbstractModel
      */
 	public $password;
 
+    /**
+     * User constructor.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+    }
 
     /**
      * @return int

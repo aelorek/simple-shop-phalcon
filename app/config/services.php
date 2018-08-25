@@ -1,5 +1,6 @@
 <?php
 
+use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Php as PhpEngine;
 use Phalcon\Mvc\Url as UrlResolver;
@@ -7,6 +8,8 @@ use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Direct as Flash;
+use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Events\Manager as EventsManager;
 
 /**
  * Shared configuration service
@@ -38,19 +41,19 @@ $di->setShared('view', function () {
     $view->setViewsDir($config->application->viewsDir);
 
     $view->registerEngines([
-        '.volt' => function ($view) {
+        '.volt'  => function ($view) {
             $config = $this->getConfig();
 
             $volt = new VoltEngine($view, $this);
 
             $volt->setOptions([
-                'compiledPath' => $config->application->cacheDir,
-                'compiledSeparator' => '_'
+                'compiledPath'      => $config->application->cacheDir,
+                'compiledSeparator' => '_',
             ]);
 
             return $volt;
         },
-        '.phtml' => PhpEngine::class
+        '.phtml' => PhpEngine::class,
 
     ]);
 
@@ -69,7 +72,7 @@ $di->setShared('db', function () {
         'username' => $config->database->username,
         'password' => $config->database->password,
         'dbname'   => $config->database->dbname,
-        'charset'  => $config->database->charset
+        'charset'  => $config->database->charset,
     ];
 
     if ($config->database->adapter == 'Postgresql') {
@@ -97,9 +100,20 @@ $di->set('flash', function () {
         'error'   => 'alert alert-danger',
         'success' => 'alert alert-success',
         'notice'  => 'alert alert-info',
-        'warning' => 'alert alert-warning'
+        'warning' => 'alert alert-warning',
     ]);
 });
+$di->set(
+    "flashSession",
+    function () {
+        return new FlashSession([
+            'error'   => 'alert alert-danger',
+            'success' => 'alert alert-success',
+            'notice'  => 'alert alert-info',
+            'warning' => 'alert alert-warning',
+        ]);
+    }
+);
 
 /**
  * Start the session the first time some component request the session service
@@ -110,3 +124,51 @@ $di->setShared('session', function () {
 
     return $session;
 });
+
+$di->set(
+    'dispatcher',
+    function () {
+        $dispatcher = new Dispatcher();
+
+        return $dispatcher;
+    }
+);
+
+
+$di->set(
+    'dispatcher',
+    function () {
+        $eventsManager = new EventsManager();
+
+        $eventsManager->attach(
+            'dispatch:beforeExecuteRoute',
+            new SecurityPlugin()
+        );
+
+        $dispatcher = new Dispatcher();
+
+        $dispatcher->setEventsManager($eventsManager);
+
+        return $dispatcher;
+    }
+);
+
+$di->set(
+    UserService::class,
+    [
+        'className' => UserService::class,
+        'arguments' => [
+            [
+                'type'  => 'service',
+                'value' => 'session',
+            ],
+        ],
+    ]
+);
+
+$di->set(
+    UserService::class,
+    function () use ($di) {
+        return new UserService($di->getShared('session'));
+    }
+);

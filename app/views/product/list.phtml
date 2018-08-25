@@ -1,0 +1,25 @@
+<div class="list-group">
+    <?php foreach ($products->items as $product) { ?>
+        <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">
+                <?= $product->name ?>
+                (Cena: <?= number_format($product->price, 2, '.', '') ?> <?= $t->_('_currency'); ?>)
+                <div class="pull-right">
+                    <small><?= $product->createdAt ?></small>
+                </div>
+            </h4>
+            <p class="list-group-item-text"><?= $product->description ?></p>
+        </a>
+    <?php } ?>
+</div>
+
+<ul class="pagination">
+    <?php for ($i = 1; $i <= $pagesCount; $i++) { ?>
+        <?php
+        if ($currentPage === $i) { ?>
+            <li><span><?= $i ?></span></li>
+        <?php } else { ?>
+            <li><a href="/<?= $i === 1 ? '' : $i ?>"><?= $i ?></a></li>
+        <?php } ?>
+    <?php } ?>
+</ul>
