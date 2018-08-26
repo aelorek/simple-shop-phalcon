@@ -29,7 +29,7 @@ class UserService extends AbstractService
      *
      * @return bool
      */
-    public function checkAndLoginUser(string $email, string $password): bool
+    public function checkAndLoginUser(string $email, string $password, $authUser = true): bool
     {
         $user = User::findFirst(
             [
@@ -44,6 +44,10 @@ class UserService extends AbstractService
             return false;
         }
 
+        if(!$authUser) {
+            return true;
+        }
+
         $this->session->set(
             self::AUTH_SESSION_KEY,
             [
@@ -53,5 +57,14 @@ class UserService extends AbstractService
         );
 
         return true;
+    }
+
+    public function getUser(): ?Array
+    {
+        if (!$this->session->has(self::AUTH_SESSION_KEY)) {
+            return null;
+        }
+
+        return $this->session->get(self::AUTH_SESSION_KEY);
     }
 }

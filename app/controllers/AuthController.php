@@ -2,13 +2,6 @@
 
 class AuthController extends AbstractController
 {
-    var $userService;
-
-    public function initialize()
-    {
-        $this->userService = $this->di->get(UserService::class);
-    }
-
     public function loginAction()
     {
         if ($this->request->isPost()) {

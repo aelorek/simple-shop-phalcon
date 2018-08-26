@@ -9,15 +9,17 @@ abstract class AbstractController extends Controller
 
     var $translator;
 
+    var $userService;
+
+
     /**
      * Initialize AbstractController
      */
     public function initialize()
     {
+        $this->userService = $this->di->getShared(UserService::class);
         $this->translator = $this->getTranslation();
-
-        $auth = $this->session->get('auth');
-        $this->view->auth = !is_null($auth);
+        $this->checkAuth();
     }
 
     /**
@@ -25,8 +27,11 @@ abstract class AbstractController extends Controller
      */
     private function getTranslation()
     {
-        $language = $this->request->getBestLanguage();
         $messages = [];
+        $language = 'en';
+        if (property_exists($this, 'request') && method_exists($this->request, 'getBestLanguage')) {
+            $language = $this->request->getBestLanguage();
+        }
 
         $translationFile = sprintf(self::TRANSLATION_DIR_FORMAT, $language);
 
@@ -41,7 +46,34 @@ abstract class AbstractController extends Controller
         );
     }
 
+    private function checkAuth()
+    {
+        try {
+            $this->user = $this->session->get('auth');
+            $this->view->auth = !is_null($this->user);
+        }
+        catch (\Exception $e) {
+
+        }
+    }
+
+    protected function getUser(): ?Array
+    {
+        return $this->userService->getUser();
+    }
+
     protected function redirectToHome()
+    {
+        return $this->dispatcher->getDI()
+            ->get('response')
+            ->redirect('/', [
+                'controller' => 'index',
+                'action'     => 'list',
+                'for'        => 'home',
+            ]);
+    }
+
+    protected function forwardToHome()
     {
         return $this->dispatcher->forward([
             'controller' => 'product',

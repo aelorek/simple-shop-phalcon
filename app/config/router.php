@@ -1,6 +1,10 @@
 <?php
 
-$router = $di->getRouter();
+if(isset($di)) {
+    $router = $di->getRouter();
+} else {
+    $router = new Phalcon\Mvc\Router();
+}
 
 
 $router->add('/{page:[0-9]*}', [

@@ -1,2 +1,4 @@
 .idea/
 app/config/config.php
+app/config/config.test.php
+vendor/

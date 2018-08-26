@@ -26,6 +26,9 @@ class AbstractModel extends Model
      */
     public function getCreatedAt(): DateTime
     {
+        if (!($this->createdAt instanceof \DateTime)) {
+            $this->createdAt = new \DateTime($this->createdAt);
+        }
         return $this->createdAt;
     }
 
@@ -42,6 +45,9 @@ class AbstractModel extends Model
      */
     public function getUpdatedAt(): DateTime
     {
+        if (!($this->updatedAt instanceof \DateTime)) {
+            $this->updatedAt = new \DateTime($this->updatedAt);
+        }
         return $this->updatedAt;
     }
 
@@ -61,16 +67,28 @@ class AbstractModel extends Model
     protected function initialize()
     {
         $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
         $eventsManager = new EventsManager();
 
         $eventsManager->attach(
             'model:beforeSave',
             function (Event $event, AbstractModel $model) {
-                if ($model->createdAt instanceof \DateTime) {
-                    $model->createdAt = date('Y-m-d H:i:s', $this->createdAt->getTimestamp());
+                if ($model->getCreatedAt() instanceof \DateTime) {
+                    $model->createdAt = date('Y-m-d H:i:s', $model->getCreatedAt()->getTimestamp());
                 }
-                if ($model->updatedAt instanceof \DateTime) {
-                    $model->updatedAt = date('Y-m-d H:i:s', $this->updatedAt->getTimestamp());
+                if ($model->getUpdatedAt() instanceof \DateTime) {
+                    $model->updatedAt = date('Y-m-d H:i:s', $model->getUpdatedAt()->getTimestamp());
+                }
+            }
+        );
+        $eventsManager->attach(
+            'model:afterSave',
+            function (Event $event, AbstractModel $model) {
+                if (!($this->createdAt instanceof \DateTime)) {
+                    $model->createdAt = new \DateTime($model->createdAt);
+                }
+                if (!is_object($this->getUpdatedAt())) {
+                    $model->updatedAt = new \DateTime($model->createdAt);
                 }
             }
         );
@@ -78,11 +96,11 @@ class AbstractModel extends Model
         $eventsManager->attach(
             'model:afterFetch',
             function (Event $event, AbstractModel $model) {
-                if (!is_object($this->createdAt)) {
-                    $model->createdAt = new \DateTime($this->createdAt);
+                if (!($this->createdAt instanceof \DateTime)) {
+                    $model->createdAt = new \DateTime($model->createdAt);
                 }
-                if (!is_object($this->updatedAt)) {
-                    $model->updatedAt = new \DateTime($this->updatedAt);
+                if (!is_object($this->getUpdatedAt())) {
+                    $model->updatedAt = new \DateTime($model->createdAt);
                 }
             }
         );

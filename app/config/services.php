@@ -103,6 +103,7 @@ $di->set('flash', function () {
         'warning' => 'alert alert-warning',
     ]);
 });
+
 $di->set(
     "flashSession",
     function () {
@@ -153,22 +154,44 @@ $di->set(
     }
 );
 
-$di->set(
+$di->setShared(
     UserService::class,
     [
         'className' => UserService::class,
         'arguments' => [
-            [
-                'type'  => 'service',
-                'value' => 'session',
+            'arguments' => [
+                [
+                    'type'  => 'service',
+                    'value' => 'session',
+                ],
             ],
         ],
     ]
 );
 
-$di->set(
+$di->setShared(
+    MailService::class,
+    [
+        'className' => MailService::class,
+        'arguments' => [
+            [
+                'type'  => 'parameter',
+                'value' => '',
+            ],
+        ],
+    ]
+);
+
+$di->setShared(
     UserService::class,
     function () use ($di) {
         return new UserService($di->getShared('session'));
+    }
+);
+
+$di->setShared(
+    MailService::class,
+    function () {
+        return new MailService($this->getConfig()->mail->sender);
     }
 );

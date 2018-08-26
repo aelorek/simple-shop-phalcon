@@ -5,18 +5,28 @@ class ProductController extends AbstractController
 {
     const PAGE_RECORDS = 10;
 
+    var $productService;
+
+    /**
+     * Initialize ProductController
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->productService = new ProductService(new MailService($this->di->get('config')->mail->sender), $this->userService);
+    }
+
     /**
      * Product list with pagination
      */
     public function listAction()
     {
-        $page = intval($this->dispatcher->getParam('page', 'int'));
+        $page = intval($this->dispatcher->getParam('page'));
 
-        $productService = new ProductService();
         [
             'products'   => $products,
             'pagesCount' => $pagesCount,
-        ] = $productService->getProductList($page);
+        ] = $this->productService->getProductList($page);
 
         $this->view->products = $products;
         $this->view->t = $this->translator;
@@ -31,26 +41,10 @@ class ProductController extends AbstractController
      */
     public function addAction()
     {
-        $product = new Product();
-        $form = new ProductForm($product);
+        $form = $this->productService->checkAndAdd($this->request, $this->translator, $this->flashSession);
 
-        if ($this->request->isPost()) {
-            if (!$form->isValid($this->request->getPost())) {
-                foreach ($form->getMessages() as $message) {
-                    $this->flashSession->error($message->getMessage());
-                }
-            } else {
-                if ($product->save()) {
-                    return $this->dispatcher->forward([
-                        'controller' => 'product',
-                        'action'     => 'list',
-                    ]);
-                } else {
-                    foreach ($product->getMessages() as $message) {
-                        $this->flashSession->error($message);
-                    }
-                }
-            }
+        if ($form === true) {
+            return $this->redirectToHome();
         }
 
         $this->view->form = $form;
