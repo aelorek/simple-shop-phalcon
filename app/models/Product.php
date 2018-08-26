@@ -30,10 +30,11 @@ class Product extends AbstractModel
      */
 	public $currency;
 
+
     /**
      * Product constructor.
      */
-	public function initialize()
+    public function initialize()
     {
         parent::initialize();
     }
