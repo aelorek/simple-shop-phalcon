@@ -8,17 +8,17 @@ class User extends AbstractModel
     /**
      * @var int
      */
-	public $id;
+    public $id;
 
     /**
      * @var string
      */
-	public $email;
+    public $email;
 
     /**
      * @var string
      */
-	public $password;
+    public $password;
 
     /**
      * User constructor.

@@ -8,27 +8,27 @@ class Product extends AbstractModel
     /**
      * @var int
      */
-	public $id;
+    public $id;
 
     /**
      * @var string
      */
-	public $name;
+    public $name;
 
     /**
      * @var string
      */
-	public $description;
+    public $description;
 
     /**
      * @var float
      */
-	public $price;
+    public $price;
 
     /**
      * @var string
      */
-	public $currency;
+    public $currency;
 
 
     /**
