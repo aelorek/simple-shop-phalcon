@@ -5,6 +5,7 @@ CREATE TABLE `product` (
   `name` varchar(255) NOT NULL,
   `description` longtext NOT NULL,
   `price` decimal(8,2) NOT NULL,
+  `currency` varchar(10) NOT NULL,
   `createdAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

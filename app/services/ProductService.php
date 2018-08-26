@@ -35,7 +35,7 @@ class ProductService extends AbstractService
         $pagesCount = intval(ceil($productsCount / $limit));
 
         $productsQuery = Product::find([
-            'order' => 'createdAt DESC',
+            'order' => 'createdAt DESC, id DESC',
         ]);
         $productPaginate = new Paginator(
             [
@@ -64,6 +64,7 @@ class ProductService extends AbstractService
                     }
                 }
             } else {
+                $product->setCurrency($translator->_('_currency'));
                 if ($product->save()) {
                     $this->mailService->sendEmail(
                         $this->userService->getUser()['email'],

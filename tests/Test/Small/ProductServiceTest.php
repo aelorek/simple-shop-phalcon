@@ -19,6 +19,7 @@ class ProductServiceTest extends AbstractTestCase
             $p->setName('product-' . $i);
             $p->setDescription('Sample product description');
             $p->setPrice($i + 100);
+            $p->setCurrency('Test');
             $p->setCreatedAt(new \DateTime());
             $p->setUpdatedAt(new \DateTime());
             $this->assertTrue($p->save());
@@ -45,6 +46,7 @@ class ProductServiceTest extends AbstractTestCase
 
         $this->assertEquals(2, $pagesCount);
         $this->assertEquals(\ProductController::PAGE_RECORDS, count($products->items));
+        $this->assertEquals(112, $products->items[0]->price); // last added
     }
 
     public function test_should_test_product_pagination_page_2()
@@ -56,5 +58,6 @@ class ProductServiceTest extends AbstractTestCase
 
         $this->assertEquals(2, $pagesCount);
         $this->assertEquals(3, count($products->items));
+        $this->assertEquals(100, $products->items[2]->price); // first added
     }
 }

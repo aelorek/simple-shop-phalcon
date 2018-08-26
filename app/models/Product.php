@@ -21,9 +21,14 @@ class Product extends AbstractModel
 	public $description;
 
     /**
-     * @var string
+     * @var float
      */
 	public $price;
+
+    /**
+     * @var string
+     */
+	public $currency;
 
     /**
      * Product constructor.
@@ -74,18 +79,34 @@ class Product extends AbstractModel
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getPrice(): string
+    public function getPrice(): float
     {
         return $this->price;
     }
 
     /**
-     * @param string $price
+     * @param float $price
      */
-    public function setPrice(string $price): void
+    public function setPrice(float $price): void
     {
         $this->price = $price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param string $currency
+     */
+    public function setCurrency(string $currency): void
+    {
+        $this->currency = $currency;
     }
 }
