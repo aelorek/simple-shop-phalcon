@@ -10,6 +10,9 @@ use Test\AbstractTestCase;
  */
 class ProductServiceTest extends AbstractTestCase
 {
+    /**
+     * @var \ProductService
+     */
     var $productService;
 
     public function initialize()

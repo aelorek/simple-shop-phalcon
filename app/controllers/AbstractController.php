@@ -17,7 +17,7 @@ abstract class AbstractController extends Controller
      */
     public function initialize()
     {
-        $this->userService = $this->di->getShared(UserService::class);
+        $this->userService = $this->getDI()->getShared(UserService::class);
         $this->translator = $this->getTranslation();
         $this->checkAuth();
     }

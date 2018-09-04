@@ -5,6 +5,9 @@ class ProductController extends AbstractController
 {
     const PAGE_RECORDS = 10;
 
+    /**
+     * @var \ProductService
+     */
     var $productService;
 
     /**
@@ -13,7 +16,10 @@ class ProductController extends AbstractController
     public function initialize()
     {
         parent::initialize();
-        $this->productService = new ProductService(new MailService($this->di->get('config')->mail->sender), $this->userService);
+        $this->productService = new ProductService(
+            new MailService($this->getDI()->get('config')->mail->sender),
+            $this->userService
+        );
     }
 
     /**

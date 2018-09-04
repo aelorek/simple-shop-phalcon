@@ -2,6 +2,10 @@
 
 class MailService extends AbstractService
 {
+    /**
+     * Email sender
+     * @var string
+     */
     var $sender;
 
     /**

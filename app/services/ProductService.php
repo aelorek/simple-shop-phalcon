@@ -6,9 +6,16 @@ use Phalcon\Translate\Adapter\NativeArray;
 
 class ProductService extends AbstractService
 {
+    /**
+     * @var MailService
+     */
     var $mailService;
 
+    /**
+     * @var UserService
+     */
     var $userService;
+
 
     /**
      * ProductService constructor.
