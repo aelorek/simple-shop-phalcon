@@ -37,13 +37,10 @@ class ProductController extends AbstractController
     {
         $page = intval($this->dispatcher->getParam('page'));
 
-        [
-            'products'   => $products,
-            'pagesCount' => $pagesCount,
-        ] = $this->productService->getProductList($page);
+        $products = $this->productService->getProductList($page);
+        $pagesCount = $this->productService->getAllProductsPages();
 
         $this->view->products = $products;
-        $this->view->t = $this->translator;
         $this->view->pagesCount = $pagesCount === 0 ? 1 : $pagesCount;
         $this->view->currentPage = $page;
         $this->view->pick('product/list');

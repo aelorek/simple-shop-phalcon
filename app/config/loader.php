@@ -22,7 +22,7 @@ $loader->registerNamespaces(
         'App\\Services'    => $config->application->servicesDir,
         'App\\Controllers' => $config->application->controllersDir,
         'App\\Forms'       => $config->application->formsDir,
-        'App\\Plugins'       => $config->application->pluginsDir,
+        'App\\Plugins'     => $config->application->pluginsDir,
     ]
 )->register();
 

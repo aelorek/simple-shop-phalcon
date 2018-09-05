@@ -2,6 +2,8 @@
 
 namespace Test;
 
+use App\Services\MailService;
+use App\Services\UserService;
 use Phalcon\Di;
 use Phalcon\Mvc\View;
 use Phalcon\Test\PHPUnit\FunctionalTestCase;
@@ -9,7 +11,6 @@ use Phalcon\Mvc\View\Engine\Php as PhpEngine;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
-use UserService;
 
 abstract class AbstractTestCase extends FunctionalTestCase
 {
@@ -104,16 +105,16 @@ abstract class AbstractTestCase extends FunctionalTestCase
         });
 
         $di->setShared(
-            \UserService::class,
+            UserService::class,
             function () use ($di) {
-                return new \UserService($di->getShared('session'));
+                return new UserService($di->getShared('session'));
             }
         );
 
         $di->setShared(
-            \MailService::class,
+            MailService::class,
             [
-                'className' => \MailService::class,
+                'className' => MailService::class,
                 'arguments' => [
                     [
                             'type'  => 'parameter',

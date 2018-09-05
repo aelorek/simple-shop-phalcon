@@ -17,7 +17,7 @@ define('PATH_RESOURCES', APP_PATH . '/resources/');
 define('PATH_CONTROLLERS', APP_PATH . '/controllers/');
 define('PATH_PLUGINS', __DIR__ . '/plugins/');
 define('PATH_MODELS', APP_PATH . '/models/');
-define('PATH_DATABASE', ROOT_PATH . '/../database/');
+define('PATH_DATABASE', APP_PATH . '/migrations/');
 
 
 set_include_path(
@@ -36,9 +36,17 @@ $loader->registerDirs(
         PATH_CONTROLLERS,
         PATH_PLUGINS,
     ]
-);
+)->register();
 
-$loader->register();
+
+$loader->registerNamespaces(
+    [
+        'App\\Models'      => PATH_MODELS,
+        'App\\Services'    => PATH_SERVICES,
+        'App\\Controllers' => PATH_CONTROLLERS,
+        'App\\Plugins'     => PATH_PLUGINS,
+    ]
+)->register();
 
 $di = new FactoryDefault();
 

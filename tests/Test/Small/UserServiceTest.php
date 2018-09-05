@@ -2,6 +2,8 @@
 
 namespace Test\Small;
 
+use App\Models\User;
+use App\Services\UserService;
 use Test\AbstractTestCase;
 
 /**
@@ -17,14 +19,14 @@ class UserServiceTest extends AbstractTestCase
 
     public function initialize()
     {
-        $user = new \User();
+        $user = new User();
         $user->setEmail(self::EMAIL);
         $user->setPassword(password_hash(self::PASSWORD, PASSWORD_BCRYPT, ['cost' => 12]));
         $this->assertTrue($user->save());
 
 
         $session = $this->getDI()->getShared('session');
-        $this->userService = new \UserService($session);
+        $this->userService = new UserService($session);
     }
 
     public function test_should_test_valid_user()

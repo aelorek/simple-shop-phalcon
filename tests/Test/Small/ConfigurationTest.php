@@ -2,6 +2,7 @@
 
 namespace Test\Small;
 
+use App\Controllers\ProductController;
 use Test\AbstractTestCase;
 
 /**
@@ -18,6 +19,6 @@ class ConfigurationTest extends AbstractTestCase
 
     public function test_should_test_pagination_records_count()
     {
-        $this->assertEquals(10, \ProductController::PAGE_RECORDS);
+        $this->assertEquals(10, ProductController::PAGE_RECORDS);
     }
 }

@@ -43,13 +43,10 @@ class ProductService extends AbstractService
      * @param int $page
      * @param int $limit
      *
-     * @return array
+     * @return \stdClass
      */
-    public function getProductList(int $page, int $limit = ProductController::PAGE_RECORDS): array
+    public function getProductList(int $page, int $limit = ProductController::PAGE_RECORDS): \stdClass
     {
-        $productsCount = Product::count();
-        $pagesCount = intval(ceil($productsCount / $limit));
-
         $productsQuery = Product::find([
             'order' => 'createdAt DESC, id DESC',
         ]);
@@ -61,12 +58,29 @@ class ProductService extends AbstractService
             ]
         );
 
-        return [
-            'products'   => $productPaginate->getPaginate(),
-            'pagesCount' => $pagesCount,
-        ];
+        return $productPaginate->getPaginate();
     }
 
+    /**
+     * @param int $limit
+     *
+     * @return int
+     */
+    public function getAllProductsPages(int $limit = ProductController::PAGE_RECORDS): int
+    {
+        $productsCount = Product::count();
+        $pagesCount = intval(ceil($productsCount / $limit));
+
+        return $pagesCount;
+    }
+
+    /**
+     * @param Request     $request
+     * @param NativeArray $translator
+     * @param null        $flashSession
+     *
+     * @return ProductForm|bool
+     */
     public function checkAndAdd(Request $request, NativeArray $translator, $flashSession = null)
     {
         $product = new Product();
@@ -99,8 +113,7 @@ class ProductService extends AbstractService
                 }
             }
         }
-        catch( \Exception $e)
-        {
+        catch (\Exception $e) {
             $flashSession->error('Form error');
         }
 
