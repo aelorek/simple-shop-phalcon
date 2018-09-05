@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Services\UserService;
 use Phalcon\Mvc\Controller;
 use Phalcon\Translate\Adapter\NativeArray;
 

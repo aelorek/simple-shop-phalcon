@@ -1,5 +1,8 @@
 <?php
 
+use App\Plugins\SecurityPlugin;
+use App\Services\MailService;
+use App\Services\UserService;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Php as PhpEngine;
@@ -130,6 +133,9 @@ $di->set(
     'dispatcher',
     function () {
         $dispatcher = new Dispatcher();
+        $dispatcher->setDefaultNamespace(
+            "App\\Controllers"
+        );
 
         return $dispatcher;
     }

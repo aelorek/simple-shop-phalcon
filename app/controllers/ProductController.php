@@ -1,12 +1,20 @@
 <?php
 
+namespace App\Controllers;
 
+use App\Services\MailService;
+use App\Services\ProductService;
+
+/**
+ * Class ProductController
+ * @package controllers
+ */
 class ProductController extends AbstractController
 {
     const PAGE_RECORDS = 10;
 
     /**
-     * @var \ProductService
+     * @var ProductService
      */
     var $productService;
 

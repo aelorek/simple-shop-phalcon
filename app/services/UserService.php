@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Services;
+
+use App\Models\User;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 
 class UserService extends AbstractService
@@ -44,7 +47,7 @@ class UserService extends AbstractService
             return false;
         }
 
-        if(!$authUser) {
+        if (!$authUser) {
             return true;
         }
 

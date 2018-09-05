@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 use Phalcon\Mvc\Model;
 use Phalcon\Events\Event;
 use Phalcon\Events\Manager as EventsManager;
@@ -22,9 +24,9 @@ class AbstractModel extends Model
     public $updatedAt;
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         if (!($this->createdAt instanceof \DateTime)) {
             $this->createdAt = new \DateTime($this->createdAt);
@@ -33,17 +35,17 @@ class AbstractModel extends Model
     }
 
     /**
-     * @param DateTime $createdAt
+     * @param \DateTime $createdAt
      */
-    public function setCreatedAt(DateTime $createdAt): void
+    public function setCreatedAt(\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): \DateTime
     {
         if (!($this->updatedAt instanceof \DateTime)) {
             $this->updatedAt = new \DateTime($this->updatedAt);
@@ -52,9 +54,9 @@ class AbstractModel extends Model
     }
 
     /**
-     * @param DateTime $updatedAt
+     * @param \DateTime $updatedAt
      */
-    public function setUpdatedAt(DateTime $updatedAt): void
+    public function setUpdatedAt(\DateTime $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }

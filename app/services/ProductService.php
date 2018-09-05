@@ -1,9 +1,18 @@
 <?php
 
+namespace App\Services;
+
+use App\Controllers\ProductController;
+use App\Forms\ProductForm;
+use App\Models\Product;
 use Phalcon\Http\Request;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Translate\Adapter\NativeArray;
 
+/**
+ * Class ProductService
+ * @package services
+ */
 class ProductService extends AbstractService
 {
     /**
@@ -36,7 +45,7 @@ class ProductService extends AbstractService
      *
      * @return array
      */
-    public function getProductList(int $page, int $limit = ProductController::PAGE_RECORDS): Array
+    public function getProductList(int $page, int $limit = ProductController::PAGE_RECORDS): array
     {
         $productsCount = Product::count();
         $pagesCount = intval(ceil($productsCount / $limit));
@@ -63,30 +72,36 @@ class ProductService extends AbstractService
         $product = new Product();
         $form = new ProductForm($product);
 
-        if ($request->isPost()) {
-            if (!$form->isValid($request->getPost())) {
-                if (!is_null($flashSession)) {
-                    foreach ($form->getMessages() as $message) {
-                        $flashSession->error($message->getMessage());
-                    }
-                }
-            } else {
-                $product->setCurrency($translator->_('_currency'));
-                if ($product->save()) {
-                    $this->mailService->sendEmail(
-                        $this->userService->getUser()['email'],
-                        $translator->_('new-product-created')
-                    );
-
-                    return true;
-                } else {
+        try {
+            if ($request->isPost()) {
+                if (!$form->isValid($request->getPost())) {
                     if (!is_null($flashSession)) {
-                        foreach ($product->getMessages() as $message) {
-                            $flashSession->error($message);
+                        foreach ($form->getMessages() as $message) {
+                            $flashSession->error($message->getMessage());
+                        }
+                    }
+                } else {
+                    $product->setCurrency($translator->_('_currency'));
+                    if ($product->save()) {
+                        $this->mailService->sendEmail(
+                            $this->userService->getUser()['email'],
+                            $translator->_('new-product-created')
+                        );
+
+                        return true;
+                    } else {
+                        if (!is_null($flashSession)) {
+                            foreach ($product->getMessages() as $message) {
+                                $flashSession->error($message);
+                            }
                         }
                     }
                 }
             }
+        }
+        catch( \Exception $e)
+        {
+            $flashSession->error('Form error');
         }
 
         return $form;
