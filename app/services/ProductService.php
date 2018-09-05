@@ -40,6 +40,8 @@ class ProductService extends AbstractService
     }
 
     /**
+     * Get all product, limited with max product per page and current page
+     *
      * @param int $page
      * @param int $limit
      *
@@ -62,6 +64,8 @@ class ProductService extends AbstractService
     }
 
     /**
+     * Get count of all products in the database
+     *
      * @param int $limit
      *
      * @return int
@@ -75,6 +79,9 @@ class ProductService extends AbstractService
     }
 
     /**
+     * Check the request with form validation, and if the form data are valid, add new product to database
+     * if form isn't valid, fetch all of errors and show them on the view
+     *
      * @param Request     $request
      * @param NativeArray $translator
      * @param null        $flashSession

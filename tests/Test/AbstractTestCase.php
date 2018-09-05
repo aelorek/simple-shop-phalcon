@@ -20,7 +20,8 @@ abstract class AbstractTestCase extends FunctionalTestCase
     private $_loaded = false;
 
     /**
-     * Bootstrap configuration
+     * Bootstrap configuration, on every test run, whole test database will be clean and initialize
+     * from migrations schema
      */
     public function setUp()
     {

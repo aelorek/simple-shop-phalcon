@@ -10,8 +10,14 @@ abstract class AbstractController extends Controller
 {
     const TRANSLATION_DIR_FORMAT = 'app/messages/%s.php';
 
+    /**
+     * @var NativeArray
+     */
     var $translator;
 
+    /**
+     * @var UserService
+     */
     var $userService;
 
 
@@ -26,6 +32,8 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * Get current language and make the translator accessible from controller
+     *
      * @return NativeArray
      */
     private function getTranslation()
@@ -49,10 +57,13 @@ abstract class AbstractController extends Controller
         );
     }
 
+    /**
+     * Assign the information to the view if user is logged in or not
+     */
     private function checkAuth()
     {
         try {
-            $this->user = $this->session->get('auth');
+            $this->user = $this->getUser();
             $this->view->auth = !is_null($this->user);
         }
         catch (\Exception $e) {
@@ -60,11 +71,19 @@ abstract class AbstractController extends Controller
         }
     }
 
-    protected function getUser(): ?Array
+    /**
+     * Get current logged in user if exist
+     *
+     * @return array|null
+     */
+    protected function getUser(): ?array
     {
         return $this->userService->getUser();
     }
 
+    /**
+     * Redirect to home page (product list)
+     */
     protected function redirectToHome()
     {
         return $this->dispatcher->getDI()
@@ -74,13 +93,5 @@ abstract class AbstractController extends Controller
                 'action'     => 'list',
                 'for'        => 'home',
             ]);
-    }
-
-    protected function forwardToHome()
-    {
-        return $this->dispatcher->forward([
-            'controller' => 'product',
-            'action'     => 'list',
-        ]);
     }
 }

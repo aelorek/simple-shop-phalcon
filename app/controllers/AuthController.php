@@ -4,6 +4,11 @@ namespace App\Controllers;
 
 class AuthController extends AbstractController
 {
+    /**
+     * Check if user exists in database with UserService
+     *
+     * @return string
+     */
     public function loginAction()
     {
         if ($this->request->isPost()) {
@@ -18,6 +23,11 @@ class AuthController extends AbstractController
         }
     }
 
+    /**
+     * Check and logout user with UserService and next redirect to home page (product list)
+     *
+     * @return mixed
+     */
     public function logoutAction()
     {
         $this->userService->logout();

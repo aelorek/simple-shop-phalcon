@@ -23,6 +23,8 @@ class MailService extends AbstractService
     }
 
     /**
+     * This is the fake mail function
+     *
      * @param string $to
      * @param string $content
      */

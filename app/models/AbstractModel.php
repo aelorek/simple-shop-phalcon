@@ -7,12 +7,13 @@ use Phalcon\Events\Event;
 use Phalcon\Events\Manager as EventsManager;
 
 /**
- * Class Product
- * @package App\Model
+ * Class AbstractModel
+ * All models have extend it
+ *
+ * @package App\Models
  */
 class AbstractModel extends Model
 {
-
     /**
      * @var \DateTime
      */

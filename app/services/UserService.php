@@ -7,10 +7,22 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 
 class UserService extends AbstractService
 {
+    /**
+     * session index for auth
+     */
     const AUTH_SESSION_KEY = 'auth';
 
+    /**
+     * @var SessionAdapter
+     */
     var $session;
 
+
+    /**
+     * UserService constructor.
+     *
+     * @param SessionAdapter $session
+     */
     public function __construct(SessionAdapter $session)
     {
         $this->session = $session;
@@ -18,6 +30,9 @@ class UserService extends AbstractService
         parent::__construct();
     }
 
+    /**
+     * Logout user - remove session
+     */
     public function logout()
     {
         if (!$this->session->has(self::AUTH_SESSION_KEY)) {
@@ -27,6 +42,8 @@ class UserService extends AbstractService
     }
 
     /**
+     * Check if user exists in database, and if yes, authorize it
+     *
      * @param string $email
      * @param string $password
      *
@@ -62,7 +79,12 @@ class UserService extends AbstractService
         return true;
     }
 
-    public function getUser(): ?Array
+    /**
+     * Return user basic information if user is logged in
+     *
+     * @return array|null
+     */
+    public function getUser(): ?array
     {
         if (!$this->session->has(self::AUTH_SESSION_KEY)) {
             return null;

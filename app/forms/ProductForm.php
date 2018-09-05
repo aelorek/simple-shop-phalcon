@@ -11,6 +11,8 @@ use Phalcon\Validation\Validator\StringLength;
 class ProductForm extends Form
 {
     /**
+     * Product form model with validation of every item
+     *
      * @param null  $entity
      * @param array $options
      */

@@ -11,6 +11,9 @@ use App\Services\ProductService;
  */
 class ProductController extends AbstractController
 {
+    /**
+     * Max product count per page
+     */
     const PAGE_RECORDS = 10;
 
     /**
